@@ -32,5 +32,38 @@ class TestReadFromFileBuiltin(unittest.TestCase):
         os.remove(filename)
 
 
+class TestReadFromFilePandas(unittest.TestCase):
+    def test_file_existence(self):
+        filename = "test_file.csv"
+        data = {"Name": [], "Age": [], "City": []}
+        df = pd.DataFrame(data)
+        df.to_csv(filename, index=False)
+
+        df = read_from_file_pandas(filename)
+        self.assertIsInstance(df, pd.DataFrame)
+        os.remove(filename)
+
+    def test_correct_columns(self):
+        filename = "test_file.csv"
+        data = {"Name": [], "Age": [], "City": []}
+        df = pd.DataFrame(data)
+        df.to_csv(filename, index=False)
+
+        df = read_from_file_pandas(filename)
+        expected_columns = ["Name", "Age", "City"]
+        self.assertListEqual(list(df.columns), expected_columns)
+        os.remove(filename)
+
+    def test_empty_file(self):
+        filename = "test_file.csv"
+        data = {"Name": [], "Age": [], "City": []}
+        df = pd.DataFrame(data)
+        df.to_csv(filename, index=False)
+
+        df = read_from_file_pandas(filename)
+        self.assertTrue(df.empty)
+        os.remove(filename)
+
+
 if __name__ == '__main__':
     unittest.main()
